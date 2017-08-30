@@ -4,7 +4,6 @@ import AlertContainer from 'react-alert';
 
 import SearchBooks from './components/SearchBooks';
 import ListBooks from './components/ListBooks';
-import If from './components/If';
 import * as BooksAPI from './api/BooksAPI';
 import './styles/App.css';
 
@@ -46,8 +45,11 @@ class App extends Component {
 
   addBook = (book, shelf) => {
     this.startLoading();
-    BooksAPI.update(book, shelf).then(book => {
-      this.refreshBooks();
+    BooksAPI.update(book, shelf).then(result => {
+      let books = this.state.books.filter(b => b.id !== book.id);
+      book.shelf = shelf;
+      books.push(book);
+      this.setState({ books });
       this.showAlert('Done', 'success');
       this.stopLoading();
     });
@@ -57,27 +59,27 @@ class App extends Component {
     const { loading } = this.state;
     return (
       <div className="app">
-        <If test={loading}>
-          <div className="loading">Loading</div>
-        </If>
+        {loading && <div className="loading">Loading</div>}
         <AlertContainer ref={msg => (this.msg = msg)} />
 
         <Route
           exact
           path="/"
-          render={() =>
-            <ListBooks books={this.state.books} onAddBook={this.addBook} />}
+          render={() => (
+            <ListBooks books={this.state.books} onAddBook={this.addBook} />
+          )}
         />
         <Route
           path="/search"
-          render={({ history }) =>
+          render={({ history }) => (
             <SearchBooks
               books={this.state.books}
               onAddBook={this.addBook}
               showAlert={this.showAlert}
               startLoading={this.startLoading}
               stopLoading={this.stopLoading}
-            />}
+            />
+          )}
         />
       </div>
     );

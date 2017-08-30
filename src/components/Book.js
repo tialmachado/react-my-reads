@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import StarRatingComponent from 'react-star-rating-component';
-import * as BookshelfType from './BookshelfType';
+import * as BookshelfType from '../enum/BookshelfType';
 
 class Book extends Component {
   constructor(props) {
@@ -26,7 +26,7 @@ class Book extends Component {
   }
 
   onChangeBookshelf(e) {
-    let currentShelf = e.target.value;
+    const currentShelf = e.target.value;
     this.props.onAddBook(this.props.book, currentShelf);
     this.setState({ currentShelf });
   }
@@ -62,21 +62,17 @@ class Book extends Component {
               <option value="none" disabled>
                 Move to...
               </option>
-              {shelfs.map(bookshelf =>
+              {shelfs.map(bookshelf => (
                 <option key={bookshelf.status} value={bookshelf.status}>
                   {bookshelf.label}
                 </option>
-              )}
+              ))}
               <option value="none">None</option>
             </select>
           </div>
         </div>
-        <div className="book-title">
-          {book.title}
-        </div>
-        <div className="book-authors">
-          {authors}
-        </div>
+        <div className="book-title">{book.title}</div>
+        <div className="book-authors">{authors}</div>
         <div className="book-rating">
           <StarRatingComponent
             name={`rating-${book.id}`}

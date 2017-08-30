@@ -15,16 +15,17 @@ class SearchBooks extends Component {
   }
 
   updateQuery = query => {
-    this.setState({
-      query
-    });
+    this.setState({ query });
     this.props.startLoading();
     BooksAPI.search(query).then(
       results => {
         if (results && results.error) {
           this.props.showAlert(results.error, 'error');
-        } else if (results && typeof results[Symbol.iterator] === 'function') {
+          this.setState({ results: [] });
+        } else if (results && Array.isArray(results)) {
           this.setState({ results });
+        } else {
+          this.setState({ results: [] });
         }
         this.props.stopLoading();
       },
@@ -35,12 +36,8 @@ class SearchBooks extends Component {
   };
 
   getCurrentShelf(book) {
-    let currentShelf = 'none';
-    let foundBook = this.props.books.find(mybook => mybook.id === book.id);
-    if (foundBook) {
-      return (currentShelf = foundBook.shelf);
-    }
-    return currentShelf;
+    const foundBook = this.props.books.find(mybook => mybook.id === book.id);
+    return foundBook ? foundBook.shelf : 'none';
   }
 
   render() {
@@ -65,7 +62,7 @@ class SearchBooks extends Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {results.map(book =>
+            {results.map(book => (
               <li key={book.id}>
                 <Book
                   book={book}
@@ -73,7 +70,7 @@ class SearchBooks extends Component {
                   currentShelf={this.getCurrentShelf(book)}
                 />
               </li>
-            )}
+            ))}
           </ol>
         </div>
       </div>
