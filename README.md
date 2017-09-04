@@ -42,7 +42,7 @@ The whitelisted short collection of available search terms
 
 ## Backend Server
 
-To simplify your development process, we've provided a backend server for you to develop against. The provided file [`BooksAPI.js`](src/BooksAPI.js) contains the methods you will need to perform necessary operations on the backend:
+The provided file [`BooksAPI.js`](src/api/BooksAPI.js) contains the following methods:
 
 ### `getAll()`
 * Returns a Promise which resolves to a JSON object containing a collection of book objects.
